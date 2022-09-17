@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,8 +19,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.giftech.jetbizcard.ui.theme.JetBizCardTheme
@@ -75,12 +78,12 @@ fun CreateBizCard() {
                     },
                     shape = RoundedCornerShape(8.dp)
                 ) {
-                    Text("Portfolio", style = MaterialTheme.typography.button)
+                    Text("Portfolios", style = MaterialTheme.typography.button)
                 }
                 if (buttonClickedState.value) {
                     Content()
                 } else {
-                    Box() {}
+                    Box {}
                 }
             }
         }
@@ -90,7 +93,7 @@ fun CreateBizCard() {
 @Composable
 private fun CreateImageProfile(modifier: Modifier = Modifier) {
     Surface(
-        Modifier
+        modifier = modifier
             .size(150.dp)
             .padding(4.dp),
         shape = CircleShape,
@@ -99,7 +102,7 @@ private fun CreateImageProfile(modifier: Modifier = Modifier) {
         color = MaterialTheme.colors.onSurface.copy(alpha = 0.5f)
     ) {
         Image(
-            modifier = Modifier.size(135.dp),
+            modifier = modifier,
             painter = painterResource(R.drawable.profile_image),
             contentDescription = "Profile Image",
             contentScale = ContentScale.Crop
@@ -154,15 +157,33 @@ fun Content() {
 fun Portfolio(data: List<String>) {
     LazyColumn {
         items(data) { item ->
-            Text(item)
+            Card(
+                modifier = Modifier
+                    .padding(12.dp)
+                    .fillMaxWidth(),
+                shape = RectangleShape,
+                elevation = 4.dp
+            ) {
+                Row(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .background(MaterialTheme.colors.surface)
+                        .padding(8.dp)
+                ) {
+                    CreateImageProfile(modifier = Modifier.size(100.dp))
+                    Column(
+                        Modifier
+                            .padding(8.dp)
+                            .align(Alignment.CenterVertically)
+                    ) {
+                        Text(item, fontWeight = FontWeight.Bold)
+                        Text(
+                            "A great project",
+                            style = MaterialTheme.typography.body2
+                        )
+                    }
+                }
+            }
         }
-    }
-}
-
-@Composable
-fun DefaultPreview() {
-    JetBizCardTheme {
-        // A surface container using the 'background' color from the theme
-        CreateBizCard()
     }
 }
